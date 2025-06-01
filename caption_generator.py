@@ -3,14 +3,15 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-API_URL = API_URL = "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1"
+API_URL = "https://api-inference.huggingface.co/models/mrm8488/t5-base-finetuned-common_gen"
+
 HF_TOKEN = os.getenv("HF_API_KEY")
 
 headers = {"Authorization": f"Bearer {HF_TOKEN}"}
 
 def generate_caption(topic, style, language):
-    prompt = f"""Generate a short, catchy Instagram caption in {language} for a photo about "{topic}".
-It should be {style.lower()}. Keep it under 20 words. Avoid hashtags."""
+    prompt = f"Generate a short, catchy Instagram caption about {topic} in {language} with a {style.lower()} tone"
+
 
     try:
         response = requests.post(API_URL, headers=headers, json={"inputs": prompt})
