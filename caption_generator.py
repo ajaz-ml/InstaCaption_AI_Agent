@@ -20,7 +20,8 @@ It should be {style.lower()}. Keep it under 20 words. Avoid hashtags."""
         if isinstance(output, list) and "generated_text" in output[0]:
             return output[0]["generated_text"]
         else:
-            return "⚠️ Couldn't generate a caption. Try again."
+            return f"⚠️ Couldn't generate a caption. Raw response: {output}"
+
 
     except Exception as e:
         return f"⚠️ Error: {str(e)}"
