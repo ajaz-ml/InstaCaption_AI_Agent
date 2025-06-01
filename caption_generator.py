@@ -4,9 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 API_URL = "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1"
-
 HF_TOKEN = os.getenv("HF_API_KEY")
-
 headers = {"Authorization": f"Bearer {HF_TOKEN}"}
 
 def generate_caption(topic, style, language):
@@ -17,11 +15,17 @@ It should be {style.lower()}. Keep it under 20 words. Avoid hashtags."""
         response = requests.post(API_URL, headers=headers, json={"inputs": prompt})
         output = response.json()
 
-        if isinstance(output, list) and "generated_text" in output[0]:
-            return output[0]["generated_text"]
+        # Extract generated text
+        if isinstance(output, list):
+            text = output[0].get("generated_text", "")
         else:
-            return f"⚠️ Couldn't generate a caption. Raw response: {output}"
+            text = output.get("generated_text", "")
 
+        # Pick the first non-empty line
+        lines = [line.strip() for line in text.split("\n") if line.strip()]
+        best_caption = lines[0] if lines else "⚠️ No caption found."
+
+        return best_caption
 
     except Exception as e:
         return f"⚠️ Error: {str(e)}"
