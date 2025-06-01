@@ -23,12 +23,15 @@ It should be {style.lower()}. Keep it under 20 words. Avoid hashtags."""
         # Get raw text
         if isinstance(output, list):
             text = output[0].get("generated_text", "")
+            print("⚠️ Raw output:\n", text)
+
         else:
             text = output.get("generated_text", "")
 
         # Split into clean lines
         lines = [line.strip("•- ").strip() for line in text.split("\n") if line.strip()]
-        captions = [line for line in lines if 0 < len(line) < 120]
+        captions = [line for line in lines if len(line) > 0]  # Remove length cap
+
 
         return captions if captions else "⚠️ No caption found."
 
